@@ -1,0 +1,29 @@
+{
+  "name": "@wukn/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/cli.js",
+  "module": "lib/cli.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "wk": "lib/cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wukn/exec": "workspace:^1.0.0",
+    "@wukn/npm-info": "workspace:^1.0.0",
+    "commander": "^9.2.0",
+    "dotenv": "^16.0.0",
+    "import-local": "^3.1.0",
+    "minimist": "^1.2.6",
+    "path-exists": "^5.0.0",
+    "root-check": "^2.0.0",
+    "semver": "^7.3.7",
+    "user-home": "^3.0.0"
+  }
+}

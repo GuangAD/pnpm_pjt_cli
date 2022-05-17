@@ -1,0 +1,28 @@
+{
+  "name": "wk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env WK_MODE=debug wk",
+    "help":  "cross-env WK_MODE=debug wk -h",
+    "init": "cross-env WK_MODE=debug wk init",
+    "init:p": "cross-env WK_MODE=debug wk init pj -p D:/workspace/cli/wk/commands/init"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "prettier": "^2.6.2"
+  },
+  "dependencies": {
+    "@wukn/log": "workspace:^1.0.0"
+  }
+}

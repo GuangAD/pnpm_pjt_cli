@@ -1,0 +1,17 @@
+{
+  "name": "@wukn/npm-info",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.2.4",
+    "semver": "^7.3.7",
+    "url-join": "^5.0.0"
+  }
+}
