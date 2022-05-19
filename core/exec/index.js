@@ -4,10 +4,11 @@ import { resolve } from 'path'
 import { pathToFileURL } from 'url'
 import childProcess from 'child_process'
 const logexec = logGe('exec')
+
+// 根据command 下载缓存相应的包并执行包中的代码 commands/xxxxx
 const settings = {
   init: 'vue',
 }
-// 根据command 下载缓存相应的包并执行包中的代码
 const CACHE_DIR = 'dependencies'
 
 async function exec() {

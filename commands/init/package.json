@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@wukn/command": "workspace:^1.0.0"
+    "@wukn/command": "workspace:^1.0.0",
+    "fs-extra": "^10.1.0",
+    "inquirer": "^8.2.4"
   }
 }
