@@ -7,7 +7,7 @@ const logexec = logGe('exec')
 
 // 根据command 下载缓存相应的包并执行包中的代码 commands/xxxxx
 const settings = {
-  init: 'vue',
+  init: '@imooc-cli/init',
 }
 const CACHE_DIR = 'dependencies'
 
@@ -22,8 +22,12 @@ async function exec() {
   let storePath
   let pkg
   if (!targetPath) {
+    // targetPath ---> 当前命令需要执行的包的路径
+    // 有则执行本地开发的功能包
+    logexec.info(homePath)
     targetPath = resolve(homePath, CACHE_DIR)
     storePath = resolve(targetPath, 'node_modules')
+    logexec.info(1)
 
     pkg = new Package({
       targetPath,
@@ -46,6 +50,7 @@ async function exec() {
       packageVersion,
     })
   }
+  // 获取包的入口文件
   const rootFile = pkg.getEntryFilePath()
   logexec.info(rootFile)
   if (rootFile) {
@@ -90,4 +95,4 @@ function spawn(command, args, options = {}) {
 
   return childProcess.spawn(cmd, cmgArgs, options)
 }
-export { exec }
+export { exec, spawn }

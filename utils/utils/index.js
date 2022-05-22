@@ -1,4 +1,5 @@
 import { sep } from 'path'
+import { Spinner } from 'cli-spinner'
 function isObject(o) {
   return Object.prototype.toString.call(o) === '[object Object]'
 }
@@ -9,4 +10,19 @@ function formatPath(path) {
     return path.replace(/\\/g, '/')
   }
 }
-export { isObject, formatPath }
+
+function loading(msg = 'loading...', spinnerString = '|/-\\') {
+  const spinner = new Spinner(msg + '%s')
+  spinner.start()
+  const stop = () => {
+    spinner.stop(true)
+  }
+  return stop
+}
+
+function sleep(duration = 3000) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration)
+  })
+}
+export { isObject, formatPath, loading, sleep }

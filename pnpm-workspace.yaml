@@ -3,4 +3,5 @@ packages:
   - 'core/**'
   - 'models/**'
   - 'packages/**'
+  - 'server/**'
   - 'utils/**'

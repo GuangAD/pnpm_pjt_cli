@@ -75,14 +75,15 @@ function createDefaultConfig() {
   process.env.WK_HOME_PATH = cliConfig.wk_home
 }
 async function checkGlobalUpdate() {
-  const currentVersion = pkg.version
-  const NPM_NAME = 'lodash'
-  const lastVersion = await getNpmLatestSemverVersion(NPM_NAME, currentVersion)
-  if (lastVersion && semver.gt(lastVersion, currentVersion)) {
-    logcli.warn(
-      `请手动更新 ${NPM_NAME}，当前版本：${pkg.version}，最新版本：${lastVersion}, 更新命令： npm install -g ${NPM_NAME}`
-    )
-  }
+  // TODO ------
+  // const currentVersion = pkg.version
+  // const NPM_NAME = 'lodash'
+  // const lastVersion = await getNpmLatestSemverVersion(NPM_NAME, currentVersion)
+  // if (lastVersion && semver.gt(lastVersion, currentVersion)) {
+  //   logcli.warn(
+  //     `请手动更新 ${NPM_NAME}，当前版本：${pkg.version}，最新版本：${lastVersion}, 更新命令： npm install -g ${NPM_NAME}`
+  //   )
+  // }
 }
 
 export default async function ckeck() {

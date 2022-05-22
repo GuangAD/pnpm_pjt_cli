@@ -19,6 +19,7 @@ function registrationCommand() {
 
   program.on('option:targetPath', () => {
     const { targetPath } = program.opts()
+    logcli.info('targetPath')
     process.env.WK_TARGET_PATH = targetPath
     // 不正确
   })
@@ -35,7 +36,7 @@ function registrationCommand() {
 
 async function main() {
   try {
-    // await ckeck()
+    await ckeck()
     registrationCommand()
   } catch (e) {
     logcli.error(e.message || e)

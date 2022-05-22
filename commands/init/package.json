@@ -12,7 +12,11 @@
   "license": "ISC",
   "dependencies": {
     "@wukn/command": "workspace:^1.0.0",
+    "@wukn/package": "workspace:^1.0.0",
+    "@wukn/request": "workspace:^1.0.0",
+    "@wukn/utils": "workspace:^1.0.0",
     "fs-extra": "^10.1.0",
-    "inquirer": "^8.2.4"
+    "inquirer": "^8.2.4",
+    "semver": "^7.3.7"
   }
 }
