@@ -7,7 +7,7 @@ import semver from 'semver'
 import inquirer from 'inquirer'
 import request from '@wukn/request'
 import { resolve } from 'path'
-import { loading } from '@wukn/utils'
+import { loading, exec } from '@wukn/utils'
 const logInit = logGe('command:init')
 class InitCommand extends Command {
   init() {
@@ -20,13 +20,69 @@ class InitCommand extends Command {
     try {
       // 1.准备阶段
       await this.prepare()
-      this.downLoadTemplate()
       // 2.下载模板
+      await this.downLoadTemplate()
       // 3.安装模板
+      this.installTemplate()
     } catch (e) {
       logInit.error(e.message)
     }
   }
+
+  async installTemplate() {
+    logInit.info(this.projectInfo)
+    if (this.projectInfo.projectTemplate) {
+      if (!this.projectInfo.projectTemplate.type) {
+        this.projectInfo.projectTemplate.type = 'normal'
+      }
+      if (this.projectInfo.projectTemplate.type === 'normal') {
+        await this._installNormalTemplate()
+      } else if (this.projectInfo.projectTemplate.type === 'custom') {
+        await this._installCustomTemplate()
+      } else {
+        throw new Error('无法识别的项目模板')
+      }
+    } else {
+      throw new Error('项目模板信息不存在')
+    }
+  }
+
+  async _installNormalTemplate() {
+    logInit.info(this.templatePkg.chcheFilePath)
+    const templatePath = resolve(this.templatePkg.chcheFilePath, 'template')
+    const targetPath = process.cwd()
+    fse.ensureDirSync(templatePath)
+    fse.ensureDirSync(targetPath)
+    // 拷贝
+    fse.copySync(templatePath, targetPath)
+    //  安装命令
+    if (this.projectInfo.projectTemplate.installCommand) {
+      console.log('run ', this.projectInfo.projectTemplate.installCommand)
+    } else {
+      console.log('run npm install')
+    }
+    //  启动命令
+    if (this.projectInfo.projectTemplate.startCommand) {
+      console.log('run', this.projectInfo.projectTemplate.startCommand)
+    }
+    // {
+    //   type: 'project',
+    //   projectName: 'y',
+    //   projectVersion: '1.0.0',
+    //   projectTemplate: {
+    //     name: 'Vue3 标准项目模板',
+    //     npmName: '@imooc-cli/vue3-standard-template',
+    //     version: '1.0.0',
+    //     type: 'normal',
+    //     startCommand: 'npm run serve',
+    //     ignore: [ '**/public/**' ],
+    //     tag: [ 'project' ],
+    //     buildPath: 'dist'
+    //   }
+    // }
+  }
+
+  async _installCustomTemplate() {}
 
   async downLoadTemplate() {
     // Package
@@ -40,10 +96,9 @@ class InitCommand extends Command {
     }
     const pkg = new Package(options)
     try {
-      logInit.info(pkg)
       if (await pkg.exits()) {
         let stop = loading()
-        pkg.update()
+        await pkg.update()
         stop()
         stop = null
       } else {
@@ -54,7 +109,7 @@ class InitCommand extends Command {
       }
     } catch (e) {
     } finally {
-      //
+      this.templatePkg = pkg
     }
     // await this.getProjectTemplate()
     // 1.1 通过eggjs搭建后端服务
@@ -65,10 +120,10 @@ class InitCommand extends Command {
 
   async prepare() {
     // 1. 通过项目模板API获取项目模板信息
-    await this.getProjectTemplate()
+    await this._getProjectTemplate()
     // 1. 判断执行命令的目录是否为空
     const cwd = process.cwd()
-    if (!this.isDirEmpty(cwd)) {
+    if (!this._isDirEmpty(cwd)) {
       // 2. 是否启动强制更新
       const { isClean } = await inquirer.prompt({
         type: 'comfirm',
@@ -78,23 +133,22 @@ class InitCommand extends Command {
       })
       if (isClean) {
         // 1.2 情况当前目录
-        // TODO
-        // fse.emptyDirSync(cwd)
+        fse.emptyDirSync(cwd)
       } else {
         process.exit(1)
       }
     }
     // 3. 选择创建项目或组件
     // 4. 获取项目基本信息
-    this.projectInfo = await this.createProjectInfo()
+    this.projectInfo = await this._createProjectInfo()
   }
 
-  isDirEmpty(cwd) {
+  _isDirEmpty(cwd) {
     const fl = fs.readdirSync(cwd)
     return fl.length === 0
   }
 
-  async createProjectInfo() {
+  async _createProjectInfo() {
     // 1. 选择创建项目或组件
     let ret = {}
     const { type } = await inquirer.prompt({
@@ -156,7 +210,7 @@ class InitCommand extends Command {
           type: 'list',
           name: 'projectTemplate',
           message: '请选择项目模板',
-          choices: this.generateTemplateChoice(),
+          choices: this._generateTemplateChoice(),
         },
       ])
       ret = {
@@ -170,12 +224,12 @@ class InitCommand extends Command {
     return ret
   }
 
-  async getProjectTemplate() {
+  async _getProjectTemplate() {
     const templateInfo = await request('/project/template')
     this.templateInfo = templateInfo
   }
 
-  generateTemplateChoice() {
+  _generateTemplateChoice() {
     return this.templateInfo.map((element) => ({
       value: element,
       name: element.name,

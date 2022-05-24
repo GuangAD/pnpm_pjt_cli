@@ -1,5 +1,7 @@
 import { sep } from 'path'
 import { Spinner } from 'cli-spinner'
+import childProcess from 'child_process'
+
 function isObject(o) {
   return Object.prototype.toString.call(o) === '[object Object]'
 }
@@ -25,4 +27,11 @@ function sleep(duration = 3000) {
     setTimeout(resolve, duration)
   })
 }
-export { isObject, formatPath, loading, sleep }
+
+function exec(command, args, options = {}) {
+  // const isWin32 = process.platform === 'win32'
+  // const cmd = isWin32 ? 'cmd' : command
+  // const cmgArgs = isWin32 ? ['/c'].concat(command, args) : args
+  return childProcess.spawn(command, args, options)
+}
+export { isObject, formatPath, loading, sleep, exec }

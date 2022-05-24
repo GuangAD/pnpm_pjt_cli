@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@wukn/log': workspace:^1.0.0
+      '@wukn/utils': workspace:^1.0.0
       cross-env: ^7.0.3
       eslint: ^8.14.0
       eslint-config-prettier: ^8.5.0
@@ -16,6 +17,7 @@ importers:
       prettier: ^2.6.2
     dependencies:
       '@wukn/log': link:utils/log
+      '@wukn/utils': link:utils/utils
     devDependencies:
       cross-env: 7.0.3
       eslint: 8.14.0

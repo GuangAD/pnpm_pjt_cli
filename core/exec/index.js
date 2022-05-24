@@ -2,16 +2,15 @@ import { Package } from '@wukn/package'
 import logGe from '@wukn/log'
 import { resolve } from 'path'
 import { pathToFileURL } from 'url'
-import childProcess from 'child_process'
+import { exec } from '@wukn/utils'
 const logexec = logGe('exec')
-
 // 根据command 下载缓存相应的包并执行包中的代码 commands/xxxxx
 const settings = {
   init: '@imooc-cli/init',
 }
 const CACHE_DIR = 'dependencies'
 
-async function exec() {
+async function main() {
   const command = arguments[arguments.length - 1]
   logexec.info('exec is running!!!, the command is :', command.name())
   const packageName = settings[command.name()]
@@ -74,7 +73,7 @@ async function exec() {
     })
     `
     // logexec.info(code)
-    const child = childProcess.spawn('node', ['-e', code], {
+    const child = exec('node', ['-e', code], {
       cwd: process.cwd(),
       stdio: 'inherit',
     })
@@ -87,12 +86,4 @@ async function exec() {
     })
   }
 }
-function spawn(command, args, options = {}) {
-  const isWin32 = process.platform === 'win32'
-
-  const cmd = isWin32 ? 'cmd' : command
-  const cmgArgs = isWin32 ? ['/c'].concat(command, args) : args
-
-  return childProcess.spawn(cmd, cmgArgs, options)
-}
-export { exec, spawn }
+export { main as exec }

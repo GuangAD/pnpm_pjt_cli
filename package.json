@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env WK_MODE=debug wk",
-    "help":  "cross-env WK_MODE=debug wk -h",
+    "help": "cross-env WK_MODE=debug wk -h",
     "init": "cross-env WK_MODE=debug wk init",
     "init:p": "cross-env WK_MODE=debug wk init pj -p D:/workspace/cli/wk/commands/init"
   },
@@ -23,6 +23,7 @@
     "prettier": "^2.6.2"
   },
   "dependencies": {
-    "@wukn/log": "workspace:^1.0.0"
+    "@wukn/log": "workspace:^1.0.0",
+    "@wukn/utils": "workspace:^1.0.0"
   }
 }
