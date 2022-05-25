@@ -6,9 +6,12 @@ import { Package } from '@wukn/package'
 import semver from 'semver'
 import inquirer from 'inquirer'
 import request from '@wukn/request'
-import { resolve } from 'path'
-import { loading, exec } from '@wukn/utils'
+import path, { resolve } from 'path'
+import { loading } from '@wukn/utils'
+import ejs from 'ejs'
+import glob from 'glob'
 const logInit = logGe('command:init')
+
 class InitCommand extends Command {
   init() {
     this.projectName = this._argv[0]
@@ -23,7 +26,7 @@ class InitCommand extends Command {
       // 2.下载模板
       await this.downLoadTemplate()
       // 3.安装模板
-      this.installTemplate()
+      await this.installTemplate()
     } catch (e) {
       logInit.error(e.message)
     }
@@ -47,6 +50,45 @@ class InitCommand extends Command {
     }
   }
 
+  async _ejsRander(ignore) {
+    return new Promise((resolve, reject) => {
+      const dir = process.cwd()
+      glob(
+        '**',
+        {
+          cwd: dir,
+          ignore,
+          nodir: true,
+        },
+        (error, file) => {
+          if (error) {
+            reject(error)
+          } else {
+            Promise.all(
+              file.map((file) => {
+                const filepath = path.resolve(dir, file)
+                console.log(filepath)
+                ejs.renderFile(filepath, {}, {}, (error, result) => {
+                  // 拿到结果后，重写
+                  if (!error) {
+                    fse.writeFileSync(filepath, result)
+                  }
+                })
+                return null
+              })
+            )
+              .then(() => {
+                resolve()
+              })
+              .catch((err) => {
+                reject(err)
+              })
+          }
+        }
+      )
+    })
+  }
+
   async _installNormalTemplate() {
     logInit.info(this.templatePkg.chcheFilePath)
     const templatePath = resolve(this.templatePkg.chcheFilePath, 'template')
@@ -55,6 +97,8 @@ class InitCommand extends Command {
     fse.ensureDirSync(targetPath)
     // 拷贝
     fse.copySync(templatePath, targetPath)
+    const ignores = ['node_modules/**']
+    this._ejsRander(ignores)
     //  安装命令
     if (this.projectInfo.projectTemplate.installCommand) {
       console.log('run ', this.projectInfo.projectTemplate.installCommand)
@@ -111,7 +155,6 @@ class InitCommand extends Command {
     } finally {
       this.templatePkg = pkg
     }
-    // await this.getProjectTemplate()
     // 1.1 通过eggjs搭建后端服务
     // 1.2 通过npm存储存储项目模板
     // 1.3 将项目模板信息存储到数据库中

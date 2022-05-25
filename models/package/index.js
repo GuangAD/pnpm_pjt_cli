@@ -94,8 +94,8 @@ class Package {
         storeDir: this.storePath,
         pkgs: [{ name: this.packageName, version: latestVersion }],
       })
-      this.packageVersion = latestVersion
     }
+    this.packageVersion = latestVersion
   }
 
   // 获取入口文件
